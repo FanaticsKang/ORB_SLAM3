@@ -48,3 +48,4 @@ cmake-build-debug/
 *.osa
 .vscode/*
 *.code-workspace
+Examples/Monocular/mono_fisheye

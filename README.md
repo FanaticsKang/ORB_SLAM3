@@ -1,5 +1,8 @@
 # ORB-SLAM3
 
+## fisheye
+ORB-SLAM3 的鱼眼模型可以使用Opencv进行标定得到k1~k4,详情参考[fish_eye](https://github.com/FanaticsKang/fish_eye).
+
 ### V0.3: Beta version, 4 Sep 2020
 **Authors:** Carlos Campos, Richard Elvira, Juan J. Gómez Rodríguez, [José M. M. Montiel](http://webdiis.unizar.es/~josemari/), [Juan D. Tardos](http://webdiis.unizar.es/~jdtardos/).
 
