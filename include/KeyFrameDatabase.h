@@ -1,87 +1,87 @@
 /**
-* This file is part of ORB-SLAM3
-*
-* Copyright (C) 2017-2020 Carlos Campos, Richard Elvira, Juan J. Gómez Rodríguez, José M.M. Montiel and Juan D. Tardós, University of Zaragoza.
-* Copyright (C) 2014-2016 Raúl Mur-Artal, José M.M. Montiel and Juan D. Tardós, University of Zaragoza.
-*
-* ORB-SLAM3 is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
-* License as published by the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* ORB-SLAM3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
-* the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License along with ORB-SLAM3.
-* If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ * This file is part of ORB-SLAM3
+ *
+ * Copyright (C) 2017-2020 Carlos Campos, Richard Elvira, Juan J. Gómez
+ * Rodríguez, José M.M. Montiel and Juan D. Tardós, University of Zaragoza.
+ * Copyright (C) 2014-2016 Raúl Mur-Artal, José M.M. Montiel and Juan D. Tardós,
+ * University of Zaragoza.
+ *
+ * ORB-SLAM3 is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * ORB-SLAM3 is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * ORB-SLAM3. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef KEYFRAMEDATABASE_H
 #define KEYFRAMEDATABASE_H
 
-#include <vector>
 #include <list>
 #include <set>
+#include <vector>
 
-#include "KeyFrame.h"
 #include "Frame.h"
-#include "ORBVocabulary.h"
+#include "KeyFrame.h"
 #include "Map.h"
+#include "ORBVocabulary.h"
 
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/vector.hpp>
 #include <boost/serialization/list.hpp>
+#include <boost/serialization/vector.hpp>
 
-#include<mutex>
+#include <mutex>
 
-
-namespace ORB_SLAM3
-{
+namespace ORB_SLAM3 {
 
 class KeyFrame;
 class Frame;
 class Map;
 
+class KeyFrameDatabase {
+  friend class boost::serialization::access;
 
-class KeyFrameDatabase
-{
-    friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive& ar, const unsigned int version) {
+    ar& mvBackupInvertedFileId;
+  }
 
-    template<class Archive>
-    void serialize(Archive& ar, const unsigned int version)
-    {
-        ar & mvBackupInvertedFileId;
-    }
+ public:
+  KeyFrameDatabase(const ORBVocabulary& voc);
 
-public:
+  void add(KeyFrame* pKF);
 
-    KeyFrameDatabase(const ORBVocabulary &voc);
+  void erase(KeyFrame* pKF);
 
-   void add(KeyFrame* pKF);
+  void clear();
+  void clearMap(Map* pMap);
 
-   void erase(KeyFrame* pKF);
+  // Loop Detection(DEPRECATED)
+  std::vector<KeyFrame*> DetectLoopCandidates(KeyFrame* pKF, float minScore);
 
-   void clear();
-   void clearMap(Map* pMap);
+  // Loop and Merge Detection
+  void DetectCandidates(KeyFrame* pKF, float minScore,
+                        vector<KeyFrame*>& vpLoopCand,
+                        vector<KeyFrame*>& vpMergeCand);
+  void DetectBestCandidates(KeyFrame* pKF, vector<KeyFrame*>& vpLoopCand,
+                            vector<KeyFrame*>& vpMergeCand, int nMinWords);
+  void DetectNBestCandidates(KeyFrame* pKF, vector<KeyFrame*>& vpLoopCand,
+                             vector<KeyFrame*>& vpMergeCand,
+                             size_t nNumCandidates);
 
-   // Loop Detection(DEPRECATED)
-   std::vector<KeyFrame *> DetectLoopCandidates(KeyFrame* pKF, float minScore);
+  // Relocalization
+  std::vector<KeyFrame*> DetectRelocalizationCandidates(Frame* F, Map* pMap);
 
-   // Loop and Merge Detection
-   void DetectCandidates(KeyFrame* pKF, float minScore,vector<KeyFrame*>& vpLoopCand, vector<KeyFrame*>& vpMergeCand);
-   void DetectBestCandidates(KeyFrame *pKF, vector<KeyFrame*> &vpLoopCand, vector<KeyFrame*> &vpMergeCand, int nMinWords);
-   void DetectNBestCandidates(KeyFrame *pKF, vector<KeyFrame*> &vpLoopCand, vector<KeyFrame*> &vpMergeCand, size_t nNumCandidates);
+  void PreSave();
+  void PostLoad(map<long unsigned int, KeyFrame*> mpKFid);
+  void SetORBVocabulary(ORBVocabulary* pORBVoc);
 
-   // Relocalization
-   std::vector<KeyFrame*> DetectRelocalizationCandidates(Frame* F, Map* pMap);
-
-   void PreSave();
-   void PostLoad(map<long unsigned int, KeyFrame*> mpKFid);
-   void SetORBVocabulary(ORBVocabulary* pORBVoc);
-
-protected:
-
+ protected:
   // Associated vocabulary
   const ORBVocabulary* mpVoc;
 
@@ -95,6 +95,6 @@ protected:
   std::mutex mMutex;
 };
 
-} //namespace ORB_SLAM
+}  // namespace ORB_SLAM3
 
 #endif

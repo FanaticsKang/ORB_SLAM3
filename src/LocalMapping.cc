@@ -1246,11 +1246,13 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA) {
 
   mInitTime = mpTracker->mLastFrame.mTimeStamp - vpKF.front()->mTimeStamp;
 
-//   std::chrono::steady_clock::time_point t0 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t0 =
+  //   std::chrono::steady_clock::now();
   Optimizer::InertialOptimization(mpAtlas->GetCurrentMap(), mRwg, mScale, mbg,
                                   mba, mbMonocular, infoInertial, false, false,
                                   priorG, priorA);
-//   std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t1 =
+  //   std::chrono::steady_clock::now();
 
   /*cout << "scale after inertial-only optimization: " << mScale << endl;
   cout << "bg after inertial-only optimization: " << mbg << endl;
@@ -1265,13 +1267,15 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA) {
   // Before this line we are not changing the map
 
   unique_lock<mutex> lock(mpAtlas->GetCurrentMap()->mMutexMapUpdate);
-//   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t2 =
+  //   std::chrono::steady_clock::now();
   if ((fabs(mScale - 1.f) > 0.00001) || !mbMonocular) {
     mpAtlas->GetCurrentMap()->ApplyScaledRotation(Converter::toCvMat(mRwg).t(),
                                                   mScale, true);
     mpTracker->UpdateFrameIMU(mScale, vpKF[0]->GetImuBias(), mpCurrentKeyFrame);
   }
-//   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t3 =
+  //   std::chrono::steady_clock::now();
 
   // Check if initialization OK
   if (!mpAtlas->isImuInitialized())
@@ -1284,7 +1288,8 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA) {
   cout << "ba: " << mpCurrentKeyFrame->GetAccBias() << endl;
   cout << "bg: " << mpCurrentKeyFrame->GetGyroBias() << endl;*/
 
-//   std::chrono::steady_clock::time_point t4 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t4 =
+  //   std::chrono::steady_clock::now();
   if (bFIBA) {
     if (priorA != 0.f)
       Optimizer::FullInertialBA(mpAtlas->GetCurrentMap(), 100, false, 0, NULL,
@@ -1294,7 +1299,8 @@ void LocalMapping::InitializeIMU(float priorG, float priorA, bool bFIBA) {
                                 false);
   }
 
-//   std::chrono::steady_clock::time_point t5 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t5 =
+  //   std::chrono::steady_clock::now();
 
   // If initialization is OK
   mpTracker->UpdateFrameIMU(1.0, vpKF[0]->GetImuBias(), mpCurrentKeyFrame);
@@ -1359,14 +1365,16 @@ void LocalMapping::ScaleRefinement() {
     lpKF.push_back(mpCurrentKeyFrame);
   }
 
-//   const int N = vpKF.size();
+  //   const int N = vpKF.size();
 
   mRwg = Eigen::Matrix3d::Identity();
   mScale = 1.0;
 
-//   std::chrono::steady_clock::time_point t0 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t0 =
+  //   std::chrono::steady_clock::now();
   Optimizer::InertialOptimization(mpAtlas->GetCurrentMap(), mRwg, mScale);
-//   std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t1 =
+  //   std::chrono::steady_clock::now();
 
   if (mScale < 1e-1)  // 1e-1
   {
@@ -1377,14 +1385,16 @@ void LocalMapping::ScaleRefinement() {
 
   // Before this line we are not changing the map
   unique_lock<mutex> lock(mpAtlas->GetCurrentMap()->mMutexMapUpdate);
-//   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t2 =
+  //   std::chrono::steady_clock::now();
   if ((fabs(mScale - 1.f) > 0.00001) || !mbMonocular) {
     mpAtlas->GetCurrentMap()->ApplyScaledRotation(Converter::toCvMat(mRwg).t(),
                                                   mScale, true);
     mpTracker->UpdateFrameIMU(mScale, mpCurrentKeyFrame->GetImuBias(),
                               mpCurrentKeyFrame);
   }
-//   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t3 =
+  //   std::chrono::steady_clock::now();
 
   for (list<KeyFrame*>::iterator lit = mlNewKeyFrames.begin(),
                                  lend = mlNewKeyFrames.end();
@@ -1394,8 +1404,9 @@ void LocalMapping::ScaleRefinement() {
   }
   mlNewKeyFrames.clear();
 
-//   double t_inertial_only =
-//       std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0).count();
+  //   double t_inertial_only =
+  //       std::chrono::duration_cast<std::chrono::duration<double>>(t1 -
+  //       t0).count();
 
   // To perform pose-inertial opt w.r.t. last keyframe
   mpCurrentKeyFrame->GetMap()->IncreaseChangeIndex();

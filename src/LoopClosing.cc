@@ -599,7 +599,7 @@ bool LoopClosing::DetectCommonRegionsFromBoW(
 
   ORBmatcher matcherBoW(0.9, true);
   ORBmatcher matcher(0.75, true);
-//   int nNumGuidedMatching = 0;
+  //   int nNumGuidedMatching = 0;
 
   // Varibles to select the best numbe
   KeyFrame* pBestMatchedKF;
@@ -762,11 +762,11 @@ bool LoopClosing::DetectCommonRegionsFromBoW(
           // Optimize Sim3 transformation with every matches
           Eigen::Matrix<double, 7, 7> mHessian7x7;
 
-        //   bool bFixedScale = mbFixScale;
-        //   if (mpTracker->mSensor == System::IMU_MONOCULAR &&
-        //       !mpCurrentKF->GetMap()->GetIniertialBA2()) {
-        //     bFixedScale = false;
-        //   }
+          //   bool bFixedScale = mbFixScale;
+          //   if (mpTracker->mSensor == System::IMU_MONOCULAR &&
+          //       !mpCurrentKF->GetMap()->GetIniertialBA2()) {
+          //     bFixedScale = false;
+          //   }
 
           int numOptMatches =
               Optimizer::OptimizeSim3(mpCurrentKF, pKFi, vpMatchedMP, gScm, 10,
@@ -1294,8 +1294,8 @@ void LoopClosing::MergeLocal() {
                      Verbose::VERBOSITY_NORMAL);
   // mpTracker->SetStepByStep(true);
 
-  const size_t numTemporalKFs = 15;  // TODO (set by parameter): Temporal KFs in the
-                            // local window if the map is inertial.
+  const size_t numTemporalKFs = 15;  // TODO (set by parameter): Temporal KFs in
+                                     // the local window if the map is inertial.
 
   // Relationship to rebuild the essential graph, it is used two times, first in
   // the local window and later in the rest of the map
@@ -2066,7 +2066,7 @@ void LoopClosing::MergeLocal2() {
   cout << "Merge detected!!!!" << endl;
 
   // int numTemporalKFs = 11;  // TODO (set by parameter): Temporal KFs in the
-                            // local window if the map is inertial.
+  // local window if the map is inertial.
 
   // Relationship to rebuild the essential graph, it is used two times, first in
   // the local window and later in the rest of the map
@@ -2122,7 +2122,8 @@ void LoopClosing::MergeLocal2() {
     cout << "KFs after empty: " << mpAtlas->GetCurrentMap()->KeyFramesInMap()
          << endl;
 
-    // std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+    // std::chrono::steady_clock::time_point t2 =
+    // std::chrono::steady_clock::now();
     cout << "updating active map to merge reference" << endl;
     cout << "curr merge KF id: " << mpCurrentKF->mnId << endl;
     cout << "curr tracking KF id: " << mpTracker->GetLastKeyFrame()->mnId
@@ -2133,7 +2134,8 @@ void LoopClosing::MergeLocal2() {
     mpTracker->UpdateFrameIMU(s_on, mpCurrentKF->GetImuBias(),
                               mpTracker->GetLastKeyFrame());
 
-    // std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
+    // std::chrono::steady_clock::time_point t3 =
+    // std::chrono::steady_clock::now();
   }
 
   const int numKFnew = pCurrentMap->KeyFramesInMap();
@@ -2408,7 +2410,8 @@ void LoopClosing::SearchAndFuse(const KeyFrameAndPose& CorrectedPosesMap,
 
     vector<MapPoint*> vpReplacePoints(vpMapPoints.size(),
                                       static_cast<MapPoint*>(NULL));
-    // int numFused = matcher.Fuse(pKFi, cvScw, vpMapPoints, 4, vpReplacePoints);
+    // int numFused = matcher.Fuse(pKFi, cvScw, vpMapPoints, 4,
+    // vpReplacePoints);
     matcher.Fuse(pKFi, cvScw, vpMapPoints, 4, vpReplacePoints);
 
     // Get Map Mutex

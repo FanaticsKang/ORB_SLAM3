@@ -381,7 +381,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp,
       mTimeORB_Ext(0),
       mbImuPreintegrated(false),
       mpCamera(pCamera),
-      mpCamera2(nullptr){
+      mpCamera2(nullptr) {
   // Frame ID
   mnId = nNextId++;
 
@@ -1093,10 +1093,12 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight,
       mpCamera(pCamera),
       mpCamera2(pCamera2),
       mTlr(Tlr) {
-//   std::chrono::steady_clock::time_point t0 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t0 =
+  //   std::chrono::steady_clock::now();
   imgLeft = imLeft.clone();
   imgRight = imRight.clone();
-//   std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t1 =
+  //   std::chrono::steady_clock::now();
 
   // Frame ID
   mnId = nNextId++;
@@ -1120,7 +1122,8 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight,
       static_cast<KannalaBrandt8 *>(mpCamera2)->mvLappingArea[1]);
   threadLeft.join();
   threadRight.join();
-//   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t2 =
+  //   std::chrono::steady_clock::now();
 
   Nleft = mvKeys.size();
   Nright = mvKeysRight.size();
@@ -1159,7 +1162,8 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight,
   cv::hconcat(Rrl, trl, mTrl);
 
   ComputeStereoFishEyeMatches();
-//   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t3 =
+  //   std::chrono::steady_clock::now();
 
   // Put all descriptors in the same matrix
   cv::vconcat(mDescriptors, mDescriptorsRight, mDescriptors);
@@ -1168,23 +1172,30 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight,
   mvbOutlier = vector<bool>(N, false);
 
   AssignFeaturesToGrid();
-//   std::chrono::steady_clock::time_point t4 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t4 =
+  //   std::chrono::steady_clock::now();
 
   mpMutexImu = new std::mutex();
 
   UndistortKeyPoints();
-//   std::chrono::steady_clock::time_point t5 = std::chrono::steady_clock::now();
+  //   std::chrono::steady_clock::time_point t5 =
+  //   std::chrono::steady_clock::now();
 
-//   double t_read =
-//       std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(t1 - t0).count();
-//   double t_orbextract =
-//       std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(t2 - t1).count();
-//   double t_stereomatches =
-//       std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(t3 - t2).count();
-//   double t_assign =
-//       std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(t4 - t3).count();
-//   double t_undistort =
-//       std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(t5 -t4).count();
+  //   double t_read =
+  //       std::chrono::duration_cast<std::chrono::duration<double,
+  //       std::milli>>(t1 - t0).count();
+  //   double t_orbextract =
+  //       std::chrono::duration_cast<std::chrono::duration<double,
+  //       std::milli>>(t2 - t1).count();
+  //   double t_stereomatches =
+  //       std::chrono::duration_cast<std::chrono::duration<double,
+  //       std::milli>>(t3 - t2).count();
+  //   double t_assign =
+  //       std::chrono::duration_cast<std::chrono::duration<double,
+  //       std::milli>>(t4 - t3).count();
+  //   double t_undistort =
+  //       std::chrono::duration_cast<std::chrono::duration<double,
+  //       std::milli>>(t5 -t4).count();
 
   /*cout << "Reading time: " << t_read << endl;
   cout << "Extraction time: " << t_orbextract << endl;
