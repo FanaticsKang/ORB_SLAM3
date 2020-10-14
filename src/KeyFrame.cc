@@ -27,74 +27,171 @@ namespace ORB_SLAM3
 
 long unsigned int KeyFrame::nNextId=0;
 
-KeyFrame::KeyFrame():
-        mnFrameId(0),  mTimeStamp(0), mnGridCols(FRAME_GRID_COLS), mnGridRows(FRAME_GRID_ROWS),
-        mfGridElementWidthInv(0), mfGridElementHeightInv(0),
-        mnTrackReferenceForFrame(0), mnFuseTargetForKF(0), mnBALocalForKF(0), mnBAFixedForKF(0), mnBALocalForMerge(0),
-        mnLoopQuery(0), mnLoopWords(0), mnRelocQuery(0), mnRelocWords(0), mnMergeQuery(0), mnMergeWords(0), mnBAGlobalForKF(0),
-        fx(0), fy(0), cx(0), cy(0), invfx(0), invfy(0), mnPlaceRecognitionQuery(0), mnPlaceRecognitionWords(0), mPlaceRecognitionScore(0),
-        mbf(0), mb(0), mThDepth(0), N(0), mvKeys(static_cast<vector<cv::KeyPoint> >(NULL)), mvKeysUn(static_cast<vector<cv::KeyPoint> >(NULL)),
-        mvuRight(static_cast<vector<float> >(NULL)), mvDepth(static_cast<vector<float> >(NULL)), /*mDescriptors(NULL),*/
-        /*mBowVec(NULL), mFeatVec(NULL),*/ mnScaleLevels(0), mfScaleFactor(0),
-        mfLogScaleFactor(0), mvScaleFactors(0), mvLevelSigma2(0),
-        mvInvLevelSigma2(0), mnMinX(0), mnMinY(0), mnMaxX(0),
-        mnMaxY(0), /*mK(NULL),*/  mPrevKF(static_cast<KeyFrame*>(NULL)), mNextKF(static_cast<KeyFrame*>(NULL)), mbFirstConnection(true), mpParent(NULL), mbNotErase(false),
-        mbToBeErased(false), mbBad(false), mHalfBaseline(0), mbCurrentPlaceRecognition(false), mbHasHessian(false), mnMergeCorrectedForKF(0),
-        NLeft(0),NRight(0), mnNumberOfOpt(0)
-{
+KeyFrame::KeyFrame()
+    : mnFrameId(0),
+      mTimeStamp(0),
+      mnGridCols(FRAME_GRID_COLS),
+      mnGridRows(FRAME_GRID_ROWS),
+      mfGridElementWidthInv(0),
+      mfGridElementHeightInv(0),
+      mnTrackReferenceForFrame(0),
+      mnFuseTargetForKF(0),
+      mnBALocalForKF(0),
+      mnBAFixedForKF(0),
+      mnNumberOfOpt(0),
+      mnLoopQuery(0),
+      mnLoopWords(0),
+      mnRelocQuery(0),
+      mnRelocWords(0),
+      mnMergeQuery(0),
+      mnMergeWords(0),
+      mnPlaceRecognitionQuery(0),
+      mnPlaceRecognitionWords(0),
+      mPlaceRecognitionScore(0),
+      mbCurrentPlaceRecognition(false),
+      mnBAGlobalForKF(0),
+      mnMergeCorrectedForKF(0),
+      mnBALocalForMerge(0),
+      fx(0),
+      fy(0),
+      cx(0),
+      cy(0),
+      invfx(0),
+      invfy(0),
+      mbf(0),
+      mb(0),
+      mThDepth(0),
+      N(0),
+      mnScaleLevels(0),
+      mfScaleFactor(0),
+      mfLogScaleFactor(0),
+      mvScaleFactors(0),
+      mvLevelSigma2(0),
+      mvInvLevelSigma2(0),
+      mnMinX(0),
+      mnMinY(0),
+      mnMaxX(0),
+      mnMaxY(0),
+      mPrevKF(static_cast<KeyFrame *>(NULL)),
+      mNextKF(static_cast<KeyFrame *>(NULL)),
+      mbHasHessian(false),
+      mbFirstConnection(true),
+      mpParent(NULL),
+      mbNotErase(false),
+      mbToBeErased(false),
+      mbBad(false),
+      mHalfBaseline(0),
+      NLeft(0),
+      NRight(0)
+      {}
 
-}
+KeyFrame::KeyFrame(Frame &F, Map *pMap, KeyFrameDatabase *pKFDB)
+    : bImu(pMap->isImuInitialized()),
+      mnFrameId(F.mnId),
+      mTimeStamp(F.mTimeStamp),
+      mnGridCols(FRAME_GRID_COLS),
+      mnGridRows(FRAME_GRID_ROWS),
+      mfGridElementWidthInv(F.mfGridElementWidthInv),
+      mfGridElementHeightInv(F.mfGridElementHeightInv),
+      mnTrackReferenceForFrame(0),
+      mnFuseTargetForKF(0),
+      mnBALocalForKF(0),
+      mnBAFixedForKF(0),
+      mnNumberOfOpt(0),
+      mnLoopQuery(0),
+      mnLoopWords(0),
+      mnRelocQuery(0),
+      mnRelocWords(0),
+      mnPlaceRecognitionQuery(0),
+      mnPlaceRecognitionWords(0),
+      mPlaceRecognitionScore(0),
+      mbCurrentPlaceRecognition(false),
+      mnBAGlobalForKF(0),
+      mnMergeCorrectedForKF(0),
+      mnBALocalForMerge(0),
+      fx(F.fx),
+      fy(F.fy),
+      cx(F.cx),
+      cy(F.cy),
+      invfx(F.invfx),
+      invfy(F.invfy),
+      mbf(F.mbf),
+      mb(F.mb),
+      mThDepth(F.mThDepth),
+      mDistCoef(F.mDistCoef),
+      N(F.N),
+      mvKeys(F.mvKeys),
+      mvKeysUn(F.mvKeysUn),
+      mvuRight(F.mvuRight),
+      mvDepth(F.mvDepth),
+      mDescriptors(F.mDescriptors.clone()),
+      mBowVec(F.mBowVec),
+      mFeatVec(F.mFeatVec),
+      mnScaleLevels(F.mnScaleLevels),
+      mfScaleFactor(F.mfScaleFactor),
+      mfLogScaleFactor(F.mfLogScaleFactor),
+      mvScaleFactors(F.mvScaleFactors),
+      mvLevelSigma2(F.mvLevelSigma2),
+      mvInvLevelSigma2(F.mvInvLevelSigma2),
+      mnMinX(F.mnMinX),
+      mnMinY(F.mnMinY),
+      mnMaxX(F.mnMaxX),
+      mnMaxY(F.mnMaxY),
+      mK(F.mK),
+      mPrevKF(NULL),
+      mNextKF(NULL),
+      mpImuPreintegrated(F.mpImuPreintegrated),
+      mImuCalib(F.mImuCalib),
+      mNameFile(F.mNameFile),
+      mnDataset(F.mnDataset),
+      mbHasHessian(false),
+      mvpMapPoints(F.mvpMapPoints),
+      mpKeyFrameDB(pKFDB),
+      mpORBvocabulary(F.mpORBvocabulary),
+      mbFirstConnection(true),
+      mpParent(NULL),
+      mbNotErase(false),
+      mbToBeErased(false),
+      mbBad(false),
+      mHalfBaseline(F.mb / 2),
+      mpMap(pMap),
+      mpCamera(F.mpCamera),
+      mpCamera2(F.mpCamera2),
+      mvLeftToRightMatch(F.mvLeftToRightMatch),
+      mvRightToLeftMatch(F.mvRightToLeftMatch),
+      mTlr(F.mTlr.clone()),
+      mTrl(F.mTrl.clone()),
+      mvKeysRight(F.mvKeysRight),
+      NLeft(F.Nleft),
+      NRight(F.Nright)
+       {
+  imgLeft = F.imgLeft.clone();
+  imgRight = F.imgRight.clone();
 
-KeyFrame::KeyFrame(Frame &F, Map *pMap, KeyFrameDatabase *pKFDB):
-    bImu(pMap->isImuInitialized()), mnFrameId(F.mnId),  mTimeStamp(F.mTimeStamp), mnGridCols(FRAME_GRID_COLS), mnGridRows(FRAME_GRID_ROWS),
-    mfGridElementWidthInv(F.mfGridElementWidthInv), mfGridElementHeightInv(F.mfGridElementHeightInv),
-    mnTrackReferenceForFrame(0), mnFuseTargetForKF(0), mnBALocalForKF(0), mnBAFixedForKF(0), mnBALocalForMerge(0),
-    mnLoopQuery(0), mnLoopWords(0), mnRelocQuery(0), mnRelocWords(0), mnBAGlobalForKF(0), mnPlaceRecognitionQuery(0), mnPlaceRecognitionWords(0), mPlaceRecognitionScore(0),
-    fx(F.fx), fy(F.fy), cx(F.cx), cy(F.cy), invfx(F.invfx), invfy(F.invfy),
-    mbf(F.mbf), mb(F.mb), mThDepth(F.mThDepth), N(F.N), mvKeys(F.mvKeys), mvKeysUn(F.mvKeysUn),
-    mvuRight(F.mvuRight), mvDepth(F.mvDepth), mDescriptors(F.mDescriptors.clone()),
-    mBowVec(F.mBowVec), mFeatVec(F.mFeatVec), mnScaleLevels(F.mnScaleLevels), mfScaleFactor(F.mfScaleFactor),
-    mfLogScaleFactor(F.mfLogScaleFactor), mvScaleFactors(F.mvScaleFactors), mvLevelSigma2(F.mvLevelSigma2),
-    mvInvLevelSigma2(F.mvInvLevelSigma2), mnMinX(F.mnMinX), mnMinY(F.mnMinY), mnMaxX(F.mnMaxX),
-    mnMaxY(F.mnMaxY), mK(F.mK), mPrevKF(NULL), mNextKF(NULL), mpImuPreintegrated(F.mpImuPreintegrated),
-    mImuCalib(F.mImuCalib), mvpMapPoints(F.mvpMapPoints), mpKeyFrameDB(pKFDB),
-    mpORBvocabulary(F.mpORBvocabulary), mbFirstConnection(true), mpParent(NULL), mDistCoef(F.mDistCoef), mbNotErase(false), mnDataset(F.mnDataset),
-    mbToBeErased(false), mbBad(false), mHalfBaseline(F.mb/2), mpMap(pMap), mbCurrentPlaceRecognition(false), mNameFile(F.mNameFile), mbHasHessian(false), mnMergeCorrectedForKF(0),
-    mpCamera(F.mpCamera), mpCamera2(F.mpCamera2),
-    mvLeftToRightMatch(F.mvLeftToRightMatch),mvRightToLeftMatch(F.mvRightToLeftMatch),mTlr(F.mTlr.clone()),
-    mvKeysRight(F.mvKeysRight), NLeft(F.Nleft), NRight(F.Nright), mTrl(F.mTrl), mnNumberOfOpt(0)
-{
+  mnId = nNextId++;
 
-    imgLeft = F.imgLeft.clone();
-    imgRight = F.imgRight.clone();
-
-    mnId=nNextId++;
-
-    mGrid.resize(mnGridCols);
-    if(F.Nleft != -1)  mGridRight.resize(mnGridCols);
-    for(int i=0; i<mnGridCols;i++)
-    {
-        mGrid[i].resize(mnGridRows);
-        if(F.Nleft != -1) mGridRight[i].resize(mnGridRows);
-        for(int j=0; j<mnGridRows; j++){
-            mGrid[i][j] = F.mGrid[i][j];
-            if(F.Nleft != -1){
-                mGridRight[i][j] = F.mGridRight[i][j];
-            }
-        }
+  mGrid.resize(mnGridCols);
+  if (F.Nleft != -1) mGridRight.resize(mnGridCols);
+  for (int i = 0; i < mnGridCols; i++) {
+    mGrid[i].resize(mnGridRows);
+    if (F.Nleft != -1) mGridRight[i].resize(mnGridRows);
+    for (int j = 0; j < mnGridRows; j++) {
+      mGrid[i][j] = F.mGrid[i][j];
+      if (F.Nleft != -1) {
+        mGridRight[i][j] = F.mGridRight[i][j];
+      }
     }
+  }
 
+  if (F.mVw.empty())
+    Vw = cv::Mat::zeros(3, 1, CV_32F);
+  else
+    Vw = F.mVw.clone();
 
+  mImuBias = F.mImuBias;
+  SetPose(F.mTcw);
 
-    if(F.mVw.empty())
-        Vw = cv::Mat::zeros(3,1,CV_32F);
-    else
-        Vw = F.mVw.clone();
-
-    mImuBias = F.mImuBias;
-    SetPose(F.mTcw);
-
-    mnOriginMapId = pMap->GetId();
+  mnOriginMapId = pMap->GetId();
 }
 
 void KeyFrame::ComputeBoW()
@@ -318,7 +415,9 @@ void KeyFrame::EraseMapPointMatch(const int &idx)
 void KeyFrame::EraseMapPointMatch(MapPoint* pMP)
 {
     tuple<size_t,size_t> indexes = pMP->GetIndexInKeyFrame(this);
-    size_t leftIndex = get<0>(indexes), rightIndex = get<1>(indexes);
+    int leftIndex = static_cast<int>(get<0>(indexes));
+    int rightIndex =static_cast<int>(get<1>(indexes));
+
     if(leftIndex != -1)
         mvpMapPoints[leftIndex]=static_cast<MapPoint*>(NULL);
     if(rightIndex != -1)

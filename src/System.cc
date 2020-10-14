@@ -72,7 +72,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
        exit(-1);
     }
 
-    bool loadedAtlas = false;
+    // bool loadedAtlas = false;
 
     //----
     //Load ORB Vocabulary
@@ -581,8 +581,8 @@ void System::SaveTrajectoryEuRoC(const string &filename)
     }*/
 
     vector<Map*> vpMaps = mpAtlas->GetAllMaps();
-    Map* pBiggerMap;
-    int numMaxKFs = 0;
+    Map* pBiggerMap = nullptr;
+    size_t numMaxKFs = 0;
     for(Map* pMap :vpMaps)
     {
         if(pMap->GetAllKeyFrames().size() > numMaxKFs)
@@ -698,8 +698,8 @@ void System::SaveKeyFrameTrajectoryEuRoC(const string &filename)
     cout << endl << "Saving keyframe trajectory to " << filename << " ..." << endl;
 
     vector<Map*> vpMaps = mpAtlas->GetAllMaps();
-    Map* pBiggerMap;
-    int numMaxKFs = 0;
+    Map* pBiggerMap = nullptr;
+    size_t numMaxKFs = 0;
     for(Map* pMap :vpMaps)
     {
         if(pMap->GetAllKeyFrames().size() > numMaxKFs)

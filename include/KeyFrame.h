@@ -384,10 +384,10 @@ public:
     void SetORBVocabulary(ORBVocabulary* pORBVoc);
     void SetKeyFrameDatabase(KeyFrameDatabase* pKFDB);
 
-    bool bImu;
 
     // The following variables are accesed from only 1 thread or never change (no mutex needed).
 public:
+    bool bImu;
 
     static long unsigned int nNextId;
     long unsigned int mnId;

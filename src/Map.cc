@@ -26,16 +26,39 @@ namespace ORB_SLAM3
 
 long unsigned int Map::nNextId=0;
 
-Map::Map():mnMaxKFid(0),mnBigChangeIdx(0), mbImuInitialized(false), mnMapChange(0), mpFirstRegionKF(static_cast<KeyFrame*>(NULL)),
-mbFail(false), mIsInUse(false), mHasTumbnail(false), mbBad(false), mnMapChangeNotified(0), mbIsInertial(false), mbIMU_BA1(false), mbIMU_BA2(false)
+Map::Map():mpFirstRegionKF(static_cast<KeyFrame*>(NULL)),
+           mbFail(false),
+           mbImuInitialized(false), 
+           mnMapChange(0), 
+           mnMapChangeNotified(0),
+           mnMaxKFid(0),
+           mnBigChangeIdx(0), 
+           mIsInUse(false),
+           mHasTumbnail(false),
+           mbBad(false),
+           mbIsInertial(false), 
+           mbIMU_BA1(false),
+           mbIMU_BA2(false)
 {
     mnId=nNextId++;
     mThumbnail = static_cast<GLubyte*>(NULL);
 }
 
-Map::Map(int initKFid):mnInitKFid(initKFid), mnMaxKFid(initKFid),mnLastLoopKFid(initKFid), mnBigChangeIdx(0), mIsInUse(false),
-                       mHasTumbnail(false), mbBad(false), mbImuInitialized(false), mpFirstRegionKF(static_cast<KeyFrame*>(NULL)),
-                       mnMapChange(0), mbFail(false), mnMapChangeNotified(0), mbIsInertial(false), mbIMU_BA1(false), mbIMU_BA2(false)
+Map::Map(int initKFid):mpFirstRegionKF(static_cast<KeyFrame*>(NULL)),
+                       mbFail(false),
+                       mbImuInitialized(false),
+                       mnMapChange(0),
+                       mnMapChangeNotified(0),
+                       mnInitKFid(initKFid),
+                       mnMaxKFid(initKFid),
+                       mnLastLoopKFid(initKFid),
+                       mnBigChangeIdx(0),
+                       mIsInUse(false),
+                       mHasTumbnail(false),
+                       mbBad(false),
+                       mbIsInertial(false),
+                       mbIMU_BA1(false),
+                       mbIMU_BA2(false)
 {
     mnId=nNextId++;
     mThumbnail = static_cast<GLubyte*>(NULL);
@@ -367,9 +390,9 @@ void Map::PrintEssentialGraph()
 {
     //Print the essential graph
     vector<KeyFrame*> vpOriginKFs = mvpKeyFrameOrigins;
-    int count=0;
+    size_t count=0;
     cout << "Number of origin KFs: " << vpOriginKFs.size() << endl;
-    KeyFrame* pFirstKF;
+    KeyFrame* pFirstKF = nullptr;
     for(KeyFrame* pKFi : vpOriginKFs)
     {
         if(!pFirstKF)
@@ -390,20 +413,19 @@ void Map::PrintEssentialGraph()
         vstrHeader.push_back("--");
         vpChilds.push_back(pKFi);
     }
-    for(int i=0; i<vpChilds.size() && count <= (mspKeyFrames.size()+10); ++i)
-    {
-        count++;
-        string strHeader = vstrHeader[i];
-        KeyFrame* pKFi = vpChilds[i];
+    for (size_t i = 0;
+         i < vpChilds.size() && count <= (mspKeyFrames.size() + 10); ++i) {
+      count++;
+      string strHeader = vstrHeader[i];
+      KeyFrame* pKFi = vpChilds[i];
 
-        cout << strHeader << "KF: " << pKFi->mnId << endl;
+      cout << strHeader << "KF: " << pKFi->mnId << endl;
 
-        set<KeyFrame*> spKFiChilds = pKFi->GetChilds();
-        for(KeyFrame* pKFj : spKFiChilds)
-        {
-            vpChilds.push_back(pKFj);
-            vstrHeader.push_back(strHeader+"--");
-        }
+      set<KeyFrame*> spKFiChilds = pKFi->GetChilds();
+      for (KeyFrame* pKFj : spKFiChilds) {
+        vpChilds.push_back(pKFj);
+        vstrHeader.push_back(strHeader + "--");
+      }
     }
     if (count == (mspKeyFrames.size()+10))
         cout << "CYCLE!!"    << endl;
@@ -413,9 +435,9 @@ void Map::PrintEssentialGraph()
 
 bool Map::CheckEssentialGraph(){
     vector<KeyFrame*> vpOriginKFs = mvpKeyFrameOrigins;
-    int count=0;
+    size_t count=0;
     cout << "Number of origin KFs: " << vpOriginKFs.size() << endl;
-    KeyFrame* pFirstKF;
+    KeyFrame* pFirstKF = nullptr;
     for(KeyFrame* pKFi : vpOriginKFs)
     {
         if(!pFirstKF)
@@ -435,13 +457,12 @@ bool Map::CheckEssentialGraph(){
     for(KeyFrame* pKFi : spChilds)
         vpChilds.push_back(pKFi);
 
-    for(int i=0; i<vpChilds.size() && count <= (mspKeyFrames.size()+10); ++i)
-    {
-        count++;
-        KeyFrame* pKFi = vpChilds[i];
-        set<KeyFrame*> spKFiChilds = pKFi->GetChilds();
-        for(KeyFrame* pKFj : spKFiChilds)
-            vpChilds.push_back(pKFj);
+    for (size_t i = 0;
+         i < vpChilds.size() && count <= (mspKeyFrames.size() + 10); ++i) {
+      count++;
+      KeyFrame* pKFi = vpChilds[i];
+      set<KeyFrame*> spKFiChilds = pKFi->GetChilds();
+      for (KeyFrame* pKFj : spKFiChilds) vpChilds.push_back(pKFj);
     }
 
     cout << "count/tot" << count << "/" << mspKeyFrames.size() << endl;
@@ -502,7 +523,7 @@ void Map::printReprojectionError(list<KeyFrame*> &lpLocalWindowKFs, KeyFrame* mp
 
         vector<MapPoint*> vpMPs = pKFi->GetMapPointMatches();
         int num_points = 0;
-        for(int j=0; j<vpMPs.size(); ++j)
+        for(size_t j=0; j<vpMPs.size(); ++j)
         {
             MapPoint* pMPij = vpMPs[j];
             if(!pMPij || pMPij->isBad())
