@@ -252,7 +252,7 @@ class Tracking {
   KeyFrameDatabase *mpKeyFrameDB;
 
   // Initalization (only for monocular)
-  Initializer *mpInitializer;
+  bool mpInitializer;
   bool mbSetInit;
 
   // Local Map

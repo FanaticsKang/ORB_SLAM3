@@ -57,7 +57,7 @@ Tracking::Tracking(System *pSys, ORBVocabulary *pVoc, FrameDrawer *pFrameDrawer,
       mbVO(false),
       mpORBVocabulary(pVoc),
       mpKeyFrameDB(pKFDB),
-      mpInitializer(static_cast<Initializer *>(NULL)),
+      mpInitializer(false),
       mpSystem(pSys),
       mpViewer(NULL),
       mpFrameDrawer(pFrameDrawer),
@@ -1904,9 +1904,7 @@ void Tracking::MonocularInitialization() {
       for (size_t i = 0; i < mCurrentFrame.mvKeysUn.size(); i++)
         mvbPrevMatched[i] = mCurrentFrame.mvKeysUn[i].pt;
 
-      if (mpInitializer) delete mpInitializer;
-
-      mpInitializer = new Initializer(mCurrentFrame, 1.0, 200);
+      mpInitializer = true;
 
       fill(mvIniMatches.begin(), mvIniMatches.end(), -1);
 
@@ -1924,8 +1922,7 @@ void Tracking::MonocularInitialization() {
     if (((int)mCurrentFrame.mvKeys.size() <= 100) ||
         ((mSensor == System::IMU_MONOCULAR) &&
          (mLastFrame.mTimeStamp - mInitialFrame.mTimeStamp > 1.0))) {
-      delete mpInitializer;
-      mpInitializer = static_cast<Initializer *>(NULL);
+      mpInitializer = false;
       fill(mvIniMatches.begin(), mvIniMatches.end(), -1);
 
       return;
@@ -1938,8 +1935,7 @@ void Tracking::MonocularInitialization() {
 
     // Check if there are enough correspondences
     if (nmatches < 100) {
-      delete mpInitializer;
-      mpInitializer = static_cast<Initializer *>(NULL);
+      mpInitializer = false;
       fill(mvIniMatches.begin(), mvIniMatches.end(), -1);
       return;
     }
@@ -2130,8 +2126,7 @@ void Tracking::CreateMapInAtlas() {
   mbVO = false;  // Init value for know if there are enough MapPoints in the
                  // last KF
   if (mSensor == System::MONOCULAR || mSensor == System::IMU_MONOCULAR) {
-    if (mpInitializer) delete mpInitializer;
-    mpInitializer = static_cast<Initializer *>(NULL);
+    mpInitializer = false;
   }
 
   if ((mSensor == System::IMU_MONOCULAR || mSensor == System::IMU_STEREO) &&
@@ -3160,8 +3155,7 @@ void Tracking::Reset(bool bLocMap) {
   mState = NO_IMAGES_YET;
 
   if (mpInitializer) {
-    delete mpInitializer;
-    mpInitializer = static_cast<Initializer *>(NULL);
+    mpInitializer = false;
   }
   mbSetInit = false;
 
@@ -3216,8 +3210,7 @@ void Tracking::ResetActiveMap(bool bLocMap) {
   mState = NO_IMAGES_YET;  // NOT_INITIALIZED;
 
   if (mpInitializer) {
-    delete mpInitializer;
-    mpInitializer = static_cast<Initializer *>(NULL);
+    mpInitializer = false;
   }
 
   list<bool> lbLost;
