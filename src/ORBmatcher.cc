@@ -1816,6 +1816,8 @@ int ORBmatcher::SearchByProjection(Frame &CurrentFrame, const Frame &LastFrame,
   const bool bForward = tlc.at<float>(2) > CurrentFrame.mb && !bMono;
   const bool bBackward = -tlc.at<float>(2) > CurrentFrame.mb && !bMono;
 
+        // std::cout << "LastFrame.Nleft: " << LastFrame.Nleft << " / " << LastFrame.Nright << std::endl;
+        // std::cout << "Current.Nleft: " <<CurrentFrame.Nleft << " / " <<CurrentFrame.Nright << std::endl;
   for (int i = 0; i < LastFrame.N; i++) {
     MapPoint *pMP = LastFrame.mvpMapPoints[i];
     if (pMP) {
@@ -1913,7 +1915,10 @@ int ORBmatcher::SearchByProjection(Frame &CurrentFrame, const Frame &LastFrame,
             rotHist[bin].push_back(bestIdx2);
           }
         }
+        // std::cout << "CurrentFrame.Nleft: " << CurrentFrame.Nleft << std::endl;
         if (CurrentFrame.Nleft != -1) {
+          std::cout << " Get Here" << std::endl;
+          exit(0);
           cv::Mat x3Dr =
               CurrentFrame.mTrl.colRange(0, 3).rowRange(0, 3) * x3Dc +
               CurrentFrame.mTrl.col(3);

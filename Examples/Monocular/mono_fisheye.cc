@@ -27,6 +27,7 @@
 #include <opencv2/core/core.hpp>
 
 #include <System.h>
+#include "toc.h"
 
 using namespace std;
 
@@ -72,7 +73,7 @@ int main(int argc, char **argv) {
 
   // Main loop
   cv::Mat im;
-  for (int ni = 0; ni < nImages; ni++) {
+  for (int ni = 200; ni < nImages; ni++) {
     // Read image from file
     im = cv::imread(vstrImageFilenames[ni], cv::IMREAD_UNCHANGED);
     double tframe = vTimestamps[ni];
@@ -85,7 +86,11 @@ int main(int argc, char **argv) {
     }
 
     // Pass the image to the SLAM system
+    TicToc tic;
     SLAM.TrackMonocular(im, tframe);
+
+    const double elapsed_time = tic.TocSecond();  // unit: s
+    // std::cout << "Tracking one frame: " << elapsed_time << std::endl;
 
     // Wait to load the next frame
     usleep((10) * 1e3);

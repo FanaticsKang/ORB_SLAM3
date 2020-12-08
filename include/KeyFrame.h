@@ -590,7 +590,7 @@ class KeyFrame {
 
   cv::Mat imgLeft, imgRight;  // TODO Backup??
 
-  void PrintPointDistribution() {
+  void PrintPointDistribution() const {
     int left = 0, right = 0;
     int Nlim = (NLeft != -1) ? NLeft : N;
     for (int i = 0; i < N; i++) {

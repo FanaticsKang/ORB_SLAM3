@@ -161,10 +161,10 @@ Tracking::Tracking(System *pSys, ORBVocabulary *pVoc, FrameDrawer *pFrameDrawer,
     }
   }
 
-  // f_track_stats.open("tracking_stats"+ _nameSeq + ".txt");
-  /*f_track_stats.open("tracking_stats.txt");
-  f_track_stats << "# timestamp, Num KF local, Num MP local, time" << endl;
-  f_track_stats << fixed ;*/
+// f_track_stats.open("tracking_stats"+ _nameSeq + ".txt");
+/*f_track_stats.open("tracking_stats.txt");
+f_track_stats << "# timestamp, Num KF local, Num MP local, time" << endl;
+f_track_stats << fixed ;*/
 
 #ifdef SAVE_TIMES
   f_track_times.open("tracking_times.txt");
@@ -176,7 +176,7 @@ Tracking::Tracking(System *pSys, ORBVocabulary *pVoc, FrameDrawer *pFrameDrawer,
 }
 
 Tracking::~Tracking() {
-  // f_track_stats.close();
+// f_track_stats.close();
 #ifdef SAVE_TIMES
   f_track_times.close();
 #endif
@@ -890,18 +890,18 @@ cv::Mat Tracking::GrabImageStereo(const cv::Mat &imRectLeft,
 
   Track();
 
-  // std::chrono::steady_clock::time_point t1 =
-  // std::chrono::steady_clock::now();
+// std::chrono::steady_clock::time_point t1 =
+// std::chrono::steady_clock::now();
 
-  // double t_track =
-  //     std::chrono::duration_cast<std::chrono::duration<double,
-  //     std::milli>>(t1 - t0).count();
+// double t_track =
+//     std::chrono::duration_cast<std::chrono::duration<double,
+//     std::milli>>(t1 - t0).count();
 
-  /*cout << "trracking time: " << t_track << endl;
-  f_track_stats << setprecision(0) << mCurrentFrame.mTimeStamp*1e9 << ",";
-  f_track_stats << mvpLocalKeyFrames.size() << ",";
-  f_track_stats << mvpLocalMapPoints.size() << ",";
-  f_track_stats << setprecision(6) << t_track << endl;*/
+/*cout << "trracking time: " << t_track << endl;
+f_track_stats << setprecision(0) << mCurrentFrame.mTimeStamp*1e9 << ",";
+f_track_stats << mvpLocalKeyFrames.size() << ",";
+f_track_stats << mvpLocalMapPoints.size() << ",";
+f_track_stats << setprecision(6) << t_track << endl;*/
 
 #ifdef SAVE_TIMES
   f_track_times << mCurrentFrame.mTimeORB_Ext << ",";
@@ -947,17 +947,17 @@ cv::Mat Tracking::GrabImageRGBD(const cv::Mat &imRGB, const cv::Mat &imD,
 
   Track();
 
-  // std::chrono::steady_clock::time_point t1 =
-  // std::chrono::steady_clock::now();
+// std::chrono::steady_clock::time_point t1 =
+// std::chrono::steady_clock::now();
 
-  // double t_track =
-  //     std::chrono::duration_cast<std::chrono::duration<double,
-  //     std::milli>>(t1 - t0).count();
+// double t_track =
+//     std::chrono::duration_cast<std::chrono::duration<double,
+//     std::milli>>(t1 - t0).count();
 
-  /*f_track_stats << setprecision(0) << mCurrentFrame.mTimeStamp*1e9 << ",";
-  f_track_stats << mvpLocalKeyFrames.size() << ",";
-  f_track_stats << mvpLocalMapPoints.size() << ",";
-  f_track_stats << setprecision(6) << t_track << endl;*/
+/*f_track_stats << setprecision(0) << mCurrentFrame.mTimeStamp*1e9 << ",";
+f_track_stats << mvpLocalKeyFrames.size() << ",";
+f_track_stats << mvpLocalMapPoints.size() << ",";
+f_track_stats << setprecision(6) << t_track << endl;*/
 
 #ifdef SAVE_TIMES
   f_track_times << mCurrentFrame.mTimeORB_Ext << ",";
@@ -990,14 +990,15 @@ cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp,
 
   if (mSensor == System::MONOCULAR) {
     if (mState == NOT_INITIALIZED || mState == NO_IMAGES_YET ||
-        (lastID - initID) < mMaxFrames)
+        (lastID - initID) < mMaxFrames) {
       mCurrentFrame =
           Frame(mImGray, timestamp, mpIniORBextractor, mpORBVocabulary,
                 mpCamera, mDistCoef, mbf, mThDepth);
-    else
+    } else {
       mCurrentFrame =
           Frame(mImGray, timestamp, mpORBextractorLeft, mpORBVocabulary,
                 mpCamera, mDistCoef, mbf, mThDepth);
+    }
   } else if (mSensor == System::IMU_MONOCULAR) {
     if (mState == NOT_INITIALIZED || mState == NO_IMAGES_YET) {
       mCurrentFrame =
@@ -1008,7 +1009,6 @@ cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp,
           Frame(mImGray, timestamp, mpORBextractorLeft, mpORBVocabulary,
                 mpCamera, mDistCoef, mbf, mThDepth, &mLastFrame, *mpImuCalib);
   }
-
   if (mState == NO_IMAGES_YET) t0 = timestamp;
 
   // std::chrono::steady_clock::time_point t0 =
@@ -1020,17 +1020,17 @@ cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp,
   lastID = mCurrentFrame.mnId;
   Track();
 
-  // std::chrono::steady_clock::time_point t1 =
-  // std::chrono::steady_clock::now();
+// std::chrono::steady_clock::time_point t1 =
+// std::chrono::steady_clock::now();
 
-  // double t_track =
-  //     std::chrono::duration_cast<std::chrono::duration<double,
-  //     std::milli>>(t1 - t0).count();
+// double t_track =
+//     std::chrono::duration_cast<std::chrono::duration<double,
+//     std::milli>>(t1 - t0).count();
 
-  /*f_track_stats << setprecision(0) << mCurrentFrame.mTimeStamp*1e9 << ",";
-  f_track_stats << mvpLocalKeyFrames.size() << ",";
-  f_track_stats << mvpLocalMapPoints.size() << ",";
-  f_track_stats << setprecision(6) << t_track << endl;*/
+/*f_track_stats << setprecision(0) << mCurrentFrame.mTimeStamp*1e9 << ",";
+f_track_stats << mvpLocalKeyFrames.size() << ",";
+f_track_stats << mvpLocalMapPoints.size() << ",";
+f_track_stats << setprecision(6) << t_track << endl;*/
 
 #ifdef SAVE_TIMES
   f_track_times << mCurrentFrame.mTimeORB_Ext << ",";
@@ -1166,15 +1166,18 @@ bool Tracking::PredictStateIMU() {
     const cv::Mat Gz = (cv::Mat_<float>(3, 1) << 0, 0, -IMU::GRAVITY_VALUE);
     const float t12 = mpImuPreintegratedFromLastKF->dT;
 
-    cv::Mat Rwb2 = IMU::NormalizeRotation(
-        Rwb1 * mpImuPreintegratedFromLastKF->GetDeltaRotation(
-                   mpLastKeyFrame->GetImuBias()));
+    cv::Mat Rwb2 =
+        IMU::NormalizeRotation(Rwb1 *
+                               mpImuPreintegratedFromLastKF->GetDeltaRotation(
+                                   mpLastKeyFrame->GetImuBias()));
     cv::Mat twb2 = twb1 + Vwb1 * t12 + 0.5f * t12 * t12 * Gz +
-                   Rwb1 * mpImuPreintegratedFromLastKF->GetDeltaPosition(
-                              mpLastKeyFrame->GetImuBias());
+                   Rwb1 *
+                       mpImuPreintegratedFromLastKF->GetDeltaPosition(
+                           mpLastKeyFrame->GetImuBias());
     cv::Mat Vwb2 = Vwb1 + t12 * Gz +
-                   Rwb1 * mpImuPreintegratedFromLastKF->GetDeltaVelocity(
-                              mpLastKeyFrame->GetImuBias());
+                   Rwb1 *
+                       mpImuPreintegratedFromLastKF->GetDeltaVelocity(
+                           mpLastKeyFrame->GetImuBias());
     mCurrentFrame.SetImuPoseVelocity(Rwb2, twb2, Vwb2);
     mCurrentFrame.mPredRwb = Rwb2.clone();
     mCurrentFrame.mPredtwb = twb2.clone();
@@ -1190,16 +1193,17 @@ bool Tracking::PredictStateIMU() {
     const float t12 = mCurrentFrame.mpImuPreintegratedFrame->dT;
 
     cv::Mat Rwb2 = IMU::NormalizeRotation(
-        Rwb1 * mCurrentFrame.mpImuPreintegratedFrame->GetDeltaRotation(
-                   mLastFrame.mImuBias));
-    cv::Mat twb2 =
-        twb1 + Vwb1 * t12 + 0.5f * t12 * t12 * Gz +
-        Rwb1 * mCurrentFrame.mpImuPreintegratedFrame->GetDeltaPosition(
-                   mLastFrame.mImuBias);
-    cv::Mat Vwb2 =
-        Vwb1 + t12 * Gz +
-        Rwb1 * mCurrentFrame.mpImuPreintegratedFrame->GetDeltaVelocity(
-                   mLastFrame.mImuBias);
+        Rwb1 *
+        mCurrentFrame.mpImuPreintegratedFrame->GetDeltaRotation(
+            mLastFrame.mImuBias));
+    cv::Mat twb2 = twb1 + Vwb1 * t12 + 0.5f * t12 * t12 * Gz +
+                   Rwb1 *
+                       mCurrentFrame.mpImuPreintegratedFrame->GetDeltaPosition(
+                           mLastFrame.mImuBias);
+    cv::Mat Vwb2 = Vwb1 + t12 * Gz +
+                   Rwb1 *
+                       mCurrentFrame.mpImuPreintegratedFrame->GetDeltaVelocity(
+                           mLastFrame.mImuBias);
 
     mCurrentFrame.SetImuPoseVelocity(Rwb2, twb2, Vwb2);
     mCurrentFrame.mPredRwb = Rwb2.clone();
@@ -1730,8 +1734,9 @@ void Tracking::Track() {
       // Check if we need to insert a new keyframe
       if (bNeedKF && (bOK || (mState == RECENTLY_LOST &&
                               (mSensor == System::IMU_MONOCULAR ||
-                               mSensor == System::IMU_STEREO))))
+                               mSensor == System::IMU_STEREO)))){
         CreateNewKeyFrame();
+      }
 
       // We allow points with high innovation (considererd outliers by the Huber
       // Function) pass to the new keyframe, so that bundle adjustment will
@@ -1933,6 +1938,7 @@ void Tracking::MonocularInitialization() {
     int nmatches = matcher.SearchForInitialization(
         mInitialFrame, mCurrentFrame, mvbPrevMatched, mvIniMatches, 100);
 
+    std::cout << "Initialization Match size: " << nmatches << std::endl;
     // Check if there are enough correspondences
     if (nmatches < 100) {
       mpInitializer = false;
@@ -1947,13 +1953,15 @@ void Tracking::MonocularInitialization() {
     if (mpCamera->ReconstructWithTwoViews(mInitialFrame.mvKeysUn,
                                           mCurrentFrame.mvKeysUn, mvIniMatches,
                                           Rcw, tcw, mvIniP3D, vbTriangulated)) {
+
+      std::cout << "nmatches pre: " << nmatches << std::endl;
       for (size_t i = 0, iend = mvIniMatches.size(); i < iend; i++) {
         if (mvIniMatches[i] >= 0 && !vbTriangulated[i]) {
           mvIniMatches[i] = -1;
           nmatches--;
         }
       }
-
+      std::cout << "nmatches after: " << nmatches << std::endl;
       // Set Frame Poses
       mInitialFrame.SetPose(cv::Mat::eye(4, 4, CV_32F));
       cv::Mat Tcw = cv::Mat::eye(4, 4, CV_32F);
@@ -2171,6 +2179,7 @@ bool Tracking::TrackReferenceKeyFrame() {
 
   int nmatches =
       matcher.SearchByBoW(mpReferenceKF, mCurrentFrame, vpMapPointMatches);
+  std::cout << "\nTrackReferenceKeyFrame nmatches: " << nmatches << std::endl;
 
   if (nmatches < 15) {
     cout << "TRACK_REF_KF: Less than 15 matches!!\n";
@@ -2184,7 +2193,8 @@ bool Tracking::TrackReferenceKeyFrame() {
 
   // cout << " TrackReferenceKeyFrame mLastFrame.mTcw:  " << mLastFrame.mTcw <<
   // endl;
-  Optimizer::PoseOptimization(&mCurrentFrame);
+  int test = Optimizer::PoseOptimization(&mCurrentFrame);
+  std::cout << "PoseOptimization: "<< test << std::endl;
 
   // Discard outliers
   int nmatchesMap = 0;
@@ -2209,6 +2219,7 @@ bool Tracking::TrackReferenceKeyFrame() {
     }
   }
 
+  std::cout << "Finially TrackReferenceKeyFrame nmatches: " << nmatchesMap << std::endl;
   // TODO check these conditions
   if (mSensor == System::IMU_MONOCULAR || mSensor == System::IMU_STEREO)
     return true;
@@ -2306,6 +2317,8 @@ bool Tracking::TrackWithMotionModel() {
       mCurrentFrame, mLastFrame, th,
       mSensor == System::MONOCULAR || mSensor == System::IMU_MONOCULAR);
 
+  // std::cout << "mCurrentFrame: " << mCurrentFrame.mTcw << std::endl;
+  std::cout << "TrackMotionModel nmatches: " << nmatches << std::endl;
   // If few matches, uses a wider window search
   if (nmatches < 20) {
     Verbose::PrintMess("Not enough matches, wider window search!!",
@@ -2395,18 +2408,16 @@ bool Tracking::TrackLocalMap() {
                            Verbose::VERBOSITY_DEBUG);
         // inliers =
         // Optimizer::PoseInertialOptimizationLastFrame(&mCurrentFrame);  // ,
-        Optimizer::PoseInertialOptimizationLastFrame(
-            &mCurrentFrame);  // ,
-                              // !mpLastKeyFrame->GetMap()->GetIniertialBA1());
+        Optimizer::PoseInertialOptimizationLastFrame(&mCurrentFrame);  // ,
+        // !mpLastKeyFrame->GetMap()->GetIniertialBA1());
       } else {
         Verbose::PrintMess("TLM: PoseInertialOptimizationLastKeyFrame ",
                            Verbose::VERBOSITY_DEBUG);
         // inliers =
         // Optimizer::PoseInertialOptimizationLastKeyFrame(&mCurrentFrame);  //
         // ,
-        Optimizer::PoseInertialOptimizationLastKeyFrame(
-            &mCurrentFrame);  // ,
-                              // !mpLastKeyFrame->GetMap()->GetIniertialBA1());
+        Optimizer::PoseInertialOptimizationLastKeyFrame(&mCurrentFrame);  // ,
+        // !mpLastKeyFrame->GetMap()->GetIniertialBA1());
       }
     }
   }
@@ -2568,12 +2579,11 @@ bool Tracking::NeedNewKeyFrame() {
   bool c4 = false;
   if ((((mnMatchesInliers < 75) && (mnMatchesInliers > 15)) ||
        mState == RECENTLY_LOST) &&
-      ((mSensor ==
-        System::IMU_MONOCULAR)))  // MODIFICATION_2, originally
-                                  // ((((mnMatchesInliers<75) &&
-                                  // (mnMatchesInliers>15)) ||
-                                  // mState==RECENTLY_LOST) && ((mSensor ==
-                                  // System::IMU_MONOCULAR)))
+      ((mSensor == System::IMU_MONOCULAR)))  // MODIFICATION_2, originally
+                                             // ((((mnMatchesInliers<75) &&
+                                             // (mnMatchesInliers>15)) ||
+    // mState==RECENTLY_LOST) && ((mSensor ==
+    // System::IMU_MONOCULAR)))
     c4 = true;
   else
     c4 = false;

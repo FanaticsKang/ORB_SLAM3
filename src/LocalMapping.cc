@@ -432,6 +432,7 @@ void LocalMapping::CreateNewMapPoints() {
   const float ratioFactor = 1.5f * mpCurrentKeyFrame->mfScaleFactor;
 
   // Search matches with epipolar restriction and triangulate
+  int new_map_point = 0;
   for (size_t i = 0; i < vpNeighKFs.size(); i++) {
     if (i > 0 && CheckNewKeyFrames())  // && (mnMatchesInliers>50))
       return;
@@ -544,6 +545,7 @@ void LocalMapping::CreateNewMapPoints() {
           pCamera1 = mpCurrentKeyFrame->mpCamera2;
           pCamera2 = pKF2->mpCamera;
         } else if (!bRight1 && bRight2) {
+
           Rcw1 = mpCurrentKeyFrame->GetRotation();
           Rwc1 = Rcw1.t();
           tcw1 = mpCurrentKeyFrame->GetTranslation();
@@ -559,6 +561,7 @@ void LocalMapping::CreateNewMapPoints() {
           pCamera1 = mpCurrentKeyFrame->mpCamera;
           pCamera2 = pKF2->mpCamera2;
         } else {
+
           Rcw1 = mpCurrentKeyFrame->GetRotation();
           Rwc1 = Rcw1.t();
           tcw1 = mpCurrentKeyFrame->GetTranslation();
@@ -720,8 +723,11 @@ void LocalMapping::CreateNewMapPoints() {
 
       mpAtlas->AddMapPoint(pMP);
       mlpRecentAddedMapPoints.push_back(pMP);
+      ++new_map_point;
     }
   }
+  std::cout << "mKF id: " << mpCurrentKeyFrame->mnId << std::endl;
+  std::cout << "New map Point: " << new_map_point << std::endl;
 }
 
 void LocalMapping::SearchInNeighbors() {
