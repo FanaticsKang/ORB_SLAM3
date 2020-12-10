@@ -86,6 +86,7 @@ cv::Mat KannalaBrandt8::projectMat(const cv::Point3f &p3D) {
 }
 
 float KannalaBrandt8::uncertainty2(const Eigen::Matrix<double, 2, 1> &p2D) {
+  std::cout << "uncertainty2" << std::endl;
   /*Eigen::Matrix<double,2,1> c;
   c << mvParameters[2], mvParameters[3];
   if ((p2D-c).squaredNorm()>57600) // 240*240 (256)
@@ -220,6 +221,7 @@ bool KannalaBrandt8::ReconstructWithTwoViews(
     std::vector<bool> &vbTriangulated) {
   if (!tvr) {
     cv::Mat K = this->toK();
+    std::cout << "K: " << K << std::endl;
     tvr = new TwoViewReconstruction(K);
   }
 

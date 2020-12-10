@@ -2051,7 +2051,15 @@ void Tracking::CreateInitialMapMonocular() {
 
   // Scale initial baseline
   cv::Mat Tc2w = pKFcur->GetPose();
-  Tc2w.col(3).rowRange(0, 3) = Tc2w.col(3).rowRange(0, 3) * invMedianDepth;
+  const double map_scale = cv::norm(Tc2w.col(3).rowRange(0, 3));
+
+  const float phy_scale = 1.0f;
+    //求出实际物理尺度和地图当前的尺度之间的比例
+  const double scale = phy_scale / map_scale;
+
+    //将该比例乘到当前帧中
+  Tc2w.col(3).rowRange(0, 3) *= scale;
+  // Tc2w.col(3).rowRange(0, 3) = Tc2w.col(3).rowRange(0, 3) * invMedianDepth;
   pKFcur->SetPose(Tc2w);
 
   // Scale points
@@ -2059,7 +2067,7 @@ void Tracking::CreateInitialMapMonocular() {
   for (size_t iMP = 0; iMP < vpAllMapPoints.size(); iMP++) {
     if (vpAllMapPoints[iMP]) {
       MapPoint *pMP = vpAllMapPoints[iMP];
-      pMP->SetWorldPos(pMP->GetWorldPos() * invMedianDepth);
+      pMP->SetWorldPos(pMP->GetWorldPos() *  scale);
       pMP->UpdateNormalAndDepth();
     }
   }

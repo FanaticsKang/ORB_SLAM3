@@ -486,7 +486,6 @@ void Frame::AssignFeaturesToGrid() {
         mGridRight[i][j].reserve(nReserve);
       }
     }
-
   for (int i = 0; i < N; i++) {
     const cv::KeyPoint &kp =
         (Nleft == -1) ? mvKeysUn[i]
@@ -814,6 +813,8 @@ void Frame::UndistortKeyPoints() {
 
   // Undistort points
   mat = mat.reshape(2);
+  std::cout << "undistort point: "<< static_cast<Pinhole *>(mpCamera)->toK() << std::endl;
+  std::cout << "mDistCoef: "<< mDistCoef << std::endl;
   cv::undistortPoints(mat, mat, static_cast<Pinhole *>(mpCamera)->toK(),
                       mDistCoef, cv::Mat(), mK);
   mat = mat.reshape(1);

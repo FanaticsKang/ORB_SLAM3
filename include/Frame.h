@@ -144,6 +144,16 @@ class Frame {
   bool imuIsPreintegrated();
   void setIntegrated();
 
+  size_t CountMapPoint() const{
+    size_t count = 0;
+    for(auto& tmp:mvpMapPoints){
+      if(tmp != nullptr){
+        count++;
+      }
+    }
+    return count;
+  }
+
   cv::Mat mRwc;
   cv::Mat mOw;
 
@@ -294,6 +304,7 @@ class Frame {
   GeometricCamera *mpCamera, *mpCamera2;
 
   // Number of KeyPoints extracted in the left and right images
+  // 仅仅当立体视觉使用，单目时为-1
   int Nleft, Nright;
   // Number of Non Lapping Keypoints
   int monoLeft, monoRight;

@@ -930,9 +930,11 @@ int Optimizer::PoseOptimization(Frame* pFrame) {
         else {
           nInitialCorrespondences++;
 
+          std::cout << "GET HERE +++" << std::endl;
           cv::KeyPoint kpUn;
 
           if (i < pFrame->Nleft) {  // Left camera observation
+          std::cout << "GET HERE!!!" << std::endl;
             kpUn = pFrame->mvKeys[i];
 
             pFrame->mvbOutlier[i] = false;

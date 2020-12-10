@@ -1917,7 +1917,7 @@ int ORBmatcher::SearchByProjection(Frame &CurrentFrame, const Frame &LastFrame,
         }
         // std::cout << "CurrentFrame.Nleft: " << CurrentFrame.Nleft << std::endl;
         if (CurrentFrame.Nleft != -1) {
-          std::cout << " Get Here" << std::endl;
+          std::cout << " Get Here(((((((" << std::endl;
           exit(0);
           cv::Mat x3Dr =
               CurrentFrame.mTrl.colRange(0, 3).rowRange(0, 3) * x3Dc +
